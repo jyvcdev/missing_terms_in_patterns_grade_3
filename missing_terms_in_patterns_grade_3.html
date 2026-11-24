@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Terms in Patterns — Two Attributes (Worksheet 5)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka & Nunito for child-friendly, high-legibility typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tone.js for procedural Web Audio sound effects (zero external URLs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        :root {
+            --forest-dark: #14452f;
+            --forest-mid: #1d6343;
+            --leaf-green: #2ecc71;
+            --leaf-light: #e8f8f0;
+            --sunny-yellow: #ffd43b;
+            --sunny-dark: #f59f00;
+            --cream-bg: #f6fbf7;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--cream-bg);
+            background-image: 
+                radial-gradient(#c3e6cb 1.5px, transparent 1.5px),
+                radial-gradient(#c3e6cb 1.5px, var(--cream-bg) 1.5px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+            color: #143625;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* 3D Tactile Buttons */
+        .btn-3d {
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2) !important;
+        }
+
+        /* Animations */
+        @keyframes floatOwl {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1.5deg); }
+        }
+        .owl-float {
+            animation: floatOwl 3.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseSlot {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 212, 59, 0.7); }
+            50% { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(255, 212, 59, 0); }
+        }
+        .missing-slot {
+            animation: pulseSlot 2s infinite;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes shakeWrong {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shakeWrong 0.45s ease-in-out;
+        }
+
+        @keyframes bounceCorrect {
+            0%, 100% { transform: scale(1); }
+            40% { transform: scale(1.08); }
+            70% { transform: scale(0.97); }
+        }
+        .animate-bounce-ok {
+            animation: bounceCorrect 0.5s ease;
+        }
+
+        /* Floating math doodles in background */
+        .math-bg-symbol {
+            position: fixed;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            color: rgba(29, 99, 67, 0.06);
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative">
+
+    <!-- Subtle Decorative Math Symbols Background -->
+    <div class="math-bg-symbol text-7xl top-16 left-6 rotate-12">★ + 2</div>
+    <div class="math-bg-symbol text-8xl bottom-24 right-8 -rotate-12">A – 1</div>
+    <div class="math-bg-symbol text-6xl top-1/3 right-12 rotate-6">▲ ● ■</div>
+    <div class="math-bg-symbol text-7xl bottom-1/3 left-10 -rotate-6">1, 2, 3</div>
+
+    <!-- Top Navigation / School Hub Header -->
+    <header class="w-full bg-[#14452f] text-white shadow-lg border-b-4 border-[#ffd43b] relative z-10">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- School Branding -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()" title="Return to Home Screen">
+                <div class="w-11 h-11 rounded-2xl bg-[#ffd43b] text-[#14452f] flex items-center justify-center shadow-md border-2 border-white">
+                    <!-- Mini Owl Icon -->
+                    <svg class="w-8 h-8" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="34" r="22" fill="#14452f"/>
+                        <path d="M14 18 L22 24 L16 28 Z" fill="#14452f"/>
+                        <path d="M50 18 L42 24 L48 28 Z" fill="#14452f"/>
+                        <circle cx="24" cy="31" r="7" fill="#ffffff"/>
+                        <circle cx="40" cy="31" r="7" fill="#ffffff"/>
+                        <circle cx="25" cy="31" r="3.5" fill="#14452f"/>
+                        <circle cx="39" cy="31" r="3.5" fill="#14452f"/>
+                        <path d="M29 38 L35 38 L32 44 Z" fill="#ffd43b"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-[#ffd43b]">Legarda Elementary School</div>
+                    <div class="font-display text-base sm:text-lg font-bold leading-tight">Math Learning Hub • Grade 3</div>
+                </div>
+            </div>
+
+            <!-- Controls: Badges, Sound Toggle, Home Button -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button id="btn-home-nav" onclick="goHome()" class="hidden px-3 py-2 rounded-xl bg-[#1d6343] hover:bg-[#257a53] text-white font-bold text-sm border-2 border-[#38a169] transition flex items-center gap-1.5">
+                    <span>🏠</span> <span class="hidden sm:inline">Levels</span>
+                </button>
+                <button id="btn-sound" onclick="toggleSound()" class="px-3.5 py-2 rounded-xl bg-[#ffd43b] hover:bg-[#fcc419] text-[#14452f] font-extrabold text-sm shadow-sm border-2 border-white transition flex items-center gap-1.5">
+                    <span id="sound-icon">🔊</span>
+                    <span id="sound-label">Sound: ON</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 py-6 sm:py-8 relative z-10 flex flex-col justify-center">
+
+        <!-- ==================== SCREEN 1: START / LEVEL SELECTION SCREEN ==================== -->
+        <section id="screen-start" class="animate-pop space-y-6">
+            
+            <!-- Hero Banner with Owl Mascot -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-[#1d6343] relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-[#ffd43b] text-[#14452f] font-extrabold text-xs sm:text-sm px-4 py-1.5 rounded-bl-2xl border-b-2 border-l-2 border-[#14452f]">
+                    GRADE 3 MATHEMATICS
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <!-- Friendly Owl Mascot SVG -->
+                    <div class="flex-shrink-0 owl-float">
+                        <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-[#e8f8f0] border-4 border-[#2ecc71] flex items-center justify-center shadow-inner relative">
+                            <svg class="w-28 h-28" viewBox="0 0 120 120" fill="none">
+                                <!-- Graduation Cap -->
+                                <polygon points="60,8 102,24 60,40 18,24" fill="#14452f"/>
+                                <rect x="42" y="29" width="36" height="10" rx="4" fill="#1d6343"/>
+                                <line x1="96" y1="26" x2="96" y2="44" stroke="#ffd43b" stroke-width="3" stroke-linecap="round"/>
+                                <circle cx="96" cy="46" r="3.5" fill="#ffd43b"/>
+                                <!-- Owl Body -->
+                                <ellipse cx="60" cy="76" rx="34" ry="34" fill="#1d6343"/>
+                                <ellipse cx="60" cy="82" rx="22" ry="22" fill="#e8f8f0"/>
+                                <!-- Belly Feathers -->
+                                <path d="M50 76 Q54 81 58 76 M62 76 Q66 81 70 76 M55 86 Q60 91 65 86" stroke="#1d6343" stroke-width="2.5" stroke-linecap="round"/>
+                                <!-- Wings -->
+                                <path d="M26 68 C14 76 16 94 28 96 C30 88 28 76 26 68 Z" fill="#14452f"/>
+                                <path d="M94 68 C106 76 104 94 92 96 C90 88 92 76 94 68 Z" fill="#14452f"/>
+                                <!-- Eyes -->
+                                <circle cx="46" cy="56" r="13" fill="#ffffff" stroke="#14452f" stroke-width="3"/>
+                                <circle cx="74" cy="56" r="13" fill="#ffffff" stroke="#14452f" stroke-width="3"/>
+                                <circle cx="48" cy="56" r="6" fill="#14452f"/>
+                                <circle cx="72" cy="56" r="6" fill="#14452f"/>
+                                <circle cx="50" cy="54" r="2" fill="#ffffff"/>
+                                <circle cx="74" cy="54" r="2" fill="#ffffff"/>
+                                <!-- Beak -->
+                                <polygon points="54,64 66,64 60,74" fill="#ffd43b" stroke="#f59f00" stroke-width="1.5"/>
+                                <!-- Feet -->
+                                <path d="M44 109 L40 114 M48 109 L48 115 M52 109 L56 114" stroke="#f59f00" stroke-width="3.5" stroke-linecap="round"/>
+                                <path d="M68 109 L64 114 M72 109 L72 115 M76 109 L80 114" stroke="#f59f00" stroke-width="3.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Title & Instructions -->
+                    <div class="text-center md:text-left flex-grow space-y-3">
+                        <div class="inline-block bg-[#e8f8f0] text-[#14452f] font-extrabold px-3 py-1 rounded-full text-sm border border-[#2ecc71]">
+                            Two Attributes — Worksheet 5
+                        </div>
+                        <h1 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#14452f] tracking-tight">
+                            MISSING TERMS IN PATTERNS
+                        </h1>
+                        <div class="bg-[#fff9db] border-2 border-[#ffd43b] rounded-2xl p-4 text-[#493b00] shadow-sm">
+                            <p class="font-bold text-base sm:text-lg leading-snug">
+                                <span class="text-xl mr-1">🦉</span> <strong>How to Play:</strong> “Look carefully at the pattern. Find the missing term by identifying how the letters, symbols, and numbers change. Choose the correct answer!”
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Difficulty Selection Cards -->
+            <div>
+                <h2 class="font-display text-2xl font-bold text-[#14452f] mb-4 text-center sm:text-left flex items-center justify-center sm:justify-start gap-2">
+                    <span>🎯</span> Choose Your Challenge Level:
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- EASY LEVEL CARD -->
+                    <div class="bg-white rounded-3xl p-6 border-4 border-[#2ecc71] shadow-lg flex flex-col justify-between hover:shadow-xl transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-3.5 py-1 rounded-full bg-[#e8f8f0] text-[#14452f] font-extrabold text-sm border-2 border-[#2ecc71]">
+                                    LEVEL 1
+                                </span>
+                                <span id="best-easy" class="text-xs font-extrabold text-[#1d6343] bg-[#f1f8f4] px-2.5 py-1 rounded-lg">
+                                    Best: —/10
+                                </span>
+                            </div>
+                            <h3 class="font-display text-2xl font-bold text-[#14452f] mb-2 flex items-center gap-2">
+                                <span>🟢</span> EASY
+                            </h3>
+                            <p class="text-sm font-semibold text-gray-600 mb-4">
+                                Simple letter & number steps, alternating symbols, and missing terms at the end.
+                            </p>
+                            <div class="bg-[#f4fbf7] rounded-xl p-2.5 text-center font-bold text-sm text-[#14452f] border border-[#c3e6cb] mb-5">
+                                Example: A – 1, B – 2, C – 3, ___
+                            </div>
+                        </div>
+                        <button onclick="startLevel('easy')" class="btn-3d w-full py-3.5 rounded-2xl bg-[#2ecc71] hover:bg-[#27ae60] text-white font-display text-xl font-bold shadow-[0_5px_0_#1e8449] cursor-pointer">
+                            Play Easy ▶
+                        </button>
+                    </div>
+
+                    <!-- AVERAGE LEVEL CARD -->
+                    <div class="bg-white rounded-3xl p-6 border-4 border-[#ffd43b] shadow-lg flex flex-col justify-between hover:shadow-xl transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-3.5 py-1 rounded-full bg-[#fff9db] text-[#7c5800] font-extrabold text-sm border-2 border-[#ffd43b]">
+                                    LEVEL 2
+                                </span>
+                                <span id="best-average" class="text-xs font-extrabold text-[#7c5800] bg-[#fff9db] px-2.5 py-1 rounded-lg">
+                                    Best: —/10
+                                </span>
+                            </div>
+                            <h3 class="font-display text-2xl font-bold text-[#14452f] mb-2 flex items-center gap-2">
+                                <span>🟡</span> AVERAGE
+                            </h3>
+                            <p class="text-sm font-semibold text-gray-600 mb-4">
+                                Skip-counting with letters, alternating attributes, and missing terms in the middle.
+                            </p>
+                            <div class="bg-[#fffdf2] rounded-xl p-2.5 text-center font-bold text-sm text-[#5c4200] border border-[#ffe066] mb-5">
+                                Example: A – 3, C – 6, E – 9, ___, I – 15
+                            </div>
+                        </div>
+                        <button onclick="startLevel('average')" class="btn-3d w-full py-3.5 rounded-2xl bg-[#ffd43b] hover:bg-[#fcc419] text-[#14452f] font-display text-xl font-bold shadow-[0_5px_0_#d99b00] cursor-pointer">
+                            Play Average ▶
+                        </button>
+                    </div>
+
+                    <!-- DIFFICULT LEVEL CARD -->
+                    <div class="bg-white rounded-3xl p-6 border-4 border-[#14452f] shadow-lg flex flex-col justify-between hover:shadow-xl transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-3.5 py-1 rounded-full bg-[#e6f0ec] text-[#14452f] font-extrabold text-sm border-2 border-[#14452f]">
+                                    LEVEL 3
+                                </span>
+                                <span id="best-difficult" class="text-xs font-extrabold text-[#14452f] bg-[#e6f0ec] px-2.5 py-1 rounded-lg">
+                                    Best: —/10
+                                </span>
+                            </div>
+                            <h3 class="font-display text-2xl font-bold text-[#14452f] mb-2 flex items-center gap-2">
+                                <span>🔴</span> DIFFICULT
+                            </h3>
+                            <p class="text-sm font-semibold text-gray-600 mb-4">
+                                Larger skip-counting intervals and two independent rules to analyze together!
+                            </p>
+                            <div class="bg-[#f2f7f4] rounded-xl p-2.5 text-center font-bold text-sm text-[#14452f] border border-[#a3c4b5] mb-5">
+                                Example: A – 4, D – 8, G – 12, ___, M – 20
+                            </div>
+                        </div>
+                        <button onclick="startLevel('difficult')" class="btn-3d w-full py-3.5 rounded-2xl bg-[#14452f] hover:bg-[#1d6343] text-[#ffd43b] font-display text-xl font-bold shadow-[0_5px_0_#0a2418] cursor-pointer">
+                            Play Difficult ▶
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earned Badges Showcase -->
+            <div class="bg-white rounded-3xl p-5 border-2 border-[#c3e6cb] shadow-md">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🏅</span>
+                        <h3 class="font-display text-xl font-bold text-[#14452f]">Your Pattern Badges</h3>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 w-full sm:w-auto">
+                        <div id="badge-easy" class="flex items-center gap-2 px-3 py-2 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-50 transition">
+                            <span class="text-2xl">🌱</span>
+                            <div class="text-left">
+                                <div class="text-xs font-extrabold text-gray-800 leading-tight">Easy Explorer</div>
+                                <div class="text-[10px] font-bold text-gray-500 badge-status">Score 7+ in Easy</div>
+                            </div>
+                        </div>
+                        <div id="badge-average" class="flex items-center gap-2 px-3 py-2 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-50 transition">
+                            <span class="text-2xl">🔍</span>
+                            <div class="text-left">
+                                <div class="text-xs font-extrabold text-gray-800 leading-tight">Pattern Detective</div>
+                                <div class="text-[10px] font-bold text-gray-500 badge-status">Score 7+ in Average</div>
+                            </div>
+                        </div>
+                        <div id="badge-difficult" class="flex items-center gap-2 px-3 py-2 rounded-2xl border-2 border-gray-200 bg-gray-50 opacity-50 transition">
+                            <span class="text-2xl">👑</span>
+                            <div class="text-left">
+                                <div class="text-xs font-extrabold text-gray-800 leading-tight">Pattern Master</div>
+                                <div class="text-[10px] font-bold text-gray-500 badge-status">Score 7+ in Difficult</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SCREEN 2: GAMEPLAY SCREEN ==================== -->
+        <section id="screen-game" class="hidden space-y-5">
+            
+            <!-- Top HUD: Level Badge, Progress Bar, Score, Streak -->
+            <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-md border-2 border-[#1d6343]">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <div class="flex items-center gap-2.5">
+                        <span id="hud-level-badge" class="px-3.5 py-1 rounded-full font-extrabold text-sm bg-[#e8f8f0] text-[#14452f] border-2 border-[#2ecc71]">
+                            🟢 EASY
+                        </span>
+                        <span class="font-display text-lg sm:text-xl font-bold text-[#14452f]">
+                            Question <span id="hud-q-num">1</span> of 10
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <!-- Streak Pill -->
+                        <div class="px-3.5 py-1.5 rounded-2xl bg-[#fff9db] border-2 border-[#ffd43b] flex items-center gap-1.5">
+                            <span class="text-lg">🔥</span>
+                            <span class="text-xs font-extrabold text-[#7c5800] uppercase">Streak:</span>
+                            <span id="hud-streak" class="font-display text-lg font-bold text-[#d97706]">0</span>
+                        </div>
+
+                        <!-- Score Pill -->
+                        <div class="px-3.5 py-1.5 rounded-2xl bg-[#e8f8f0] border-2 border-[#2ecc71] flex items-center gap-1.5">
+                            <span class="text-lg">⭐</span>
+                            <span class="text-xs font-extrabold text-[#14452f] uppercase">Score:</span>
+                            <span id="hud-score" class="font-display text-lg font-bold text-[#14452f]">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Progress Bar -->
+                <div class="w-full h-4 bg-gray-200 rounded-full overflow-hidden p-0.5 border border-gray-300">
+                    <div id="hud-progress-bar" class="h-full bg-gradient-to-r from-[#2ecc71] to-[#ffd43b] rounded-full transition-all duration-500" style="width: 10%;"></div>
+                </div>
+            </div>
+
+            <!-- Main Question Card -->
+            <div id="question-card" class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-[#14452f] text-center space-y-6">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f4fbf7] border border-[#c3e6cb] text-[#1d6343] font-bold text-sm sm:text-base">
+                    <span>🧐</span> Find the missing term that completes the pattern:
+                </div>
+
+                <!-- Pattern Sequence Tiles Container -->
+                <div id="pattern-container" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 py-3">
+                    <!-- Pattern tiles injected dynamically -->
+                </div>
+
+                <!-- Answer Choices Grid (2x2 on tablet/desktop, 1 col on tiny mobile) -->
+                <div id="choices-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 max-w-2xl mx-auto pt-2">
+                    <!-- 4 Choice buttons injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Feedback & Explanation Banner (Revealed after answer selection) -->
+            <div id="feedback-box" class="hidden rounded-3xl p-5 sm:p-6 shadow-lg border-4 animate-pop">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-start gap-4 text-left">
+                        <div id="feedback-icon" class="text-4xl sm:text-5xl flex-shrink-0">🎉</div>
+                        <div>
+                            <h3 id="feedback-title" class="font-display text-xl sm:text-2xl font-bold">
+                                Excellent! You found the pattern!
+                            </h3>
+                            <p id="feedback-streak-msg" class="hidden text-sm font-extrabold text-[#d97706] mt-0.5">
+                                🔥 Streak Bonus! You're on a roll!
+                            </p>
+                            <p id="feedback-explanation" class="text-base sm:text-lg font-bold mt-1.5 leading-snug">
+                                <!-- Rule explanation injected here -->
+                            </p>
+                        </div>
+                    </div>
+
+                    <button id="btn-next" onclick="nextQuestion()" class="btn-3d w-full sm:w-auto flex-shrink-0 px-7 py-3.5 rounded-2xl bg-[#14452f] hover:bg-[#1d6343] text-[#ffd43b] font-display text-xl font-bold shadow-[0_5px_0_#0a2418] cursor-pointer">
+                        Next Question ➔
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==================== SCREEN 3: LEVEL COMPLETION / SUMMARY SCREEN ==================== -->
+        <section id="screen-complete" class="hidden animate-pop space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-[#14452f] text-center space-y-5">
+                
+                <div class="inline-block px-4 py-1 rounded-full bg-[#fff9db] border-2 border-[#ffd43b] text-[#7c5800] font-extrabold text-sm uppercase">
+                    Level Complete!
+                </div>
+
+                <!-- Stars Display -->
+                <div id="result-stars" class="text-5xl sm:text-6xl tracking-widest py-1">
+                    ⭐⭐⭐
+                </div>
+
+                <h2 id="result-title" class="font-display text-3xl sm:text-4xl font-bold text-[#14452f]">
+                    Pattern Master!
+                </h2>
+
+                <!-- Score & Percentage Stats -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-xl mx-auto">
+                    <div class="bg-[#e8f8f0] border-2 border-[#2ecc71] rounded-2xl p-3.5">
+                        <div class="text-xs font-extrabold text-[#1d6343] uppercase">Your Score</div>
+                        <div id="result-score" class="font-display text-3xl font-bold text-[#14452f]">10 / 10</div>
+                    </div>
+                    <div class="bg-[#fff9db] border-2 border-[#ffd43b] rounded-2xl p-3.5">
+                        <div class="text-xs font-extrabold text-[#7c5800] uppercase">Accuracy</div>
+                        <div id="result-percent" class="font-display text-3xl font-bold text-[#14452f]">100%</div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-[#f0f7f4] border-2 border-[#14452f] rounded-2xl p-3.5">
+                        <div class="text-xs font-extrabold text-[#14452f] uppercase">Best Streak</div>
+                        <div id="result-streak" class="font-display text-3xl font-bold text-[#d97706]">🔥 10</div>
+                    </div>
+                </div>
+
+                <!-- Badge Unlocked Notification (if earned) -->
+                <div id="result-badge-alert" class="hidden max-w-lg mx-auto bg-gradient-to-r from-[#fff9db] via-[#fff3bf] to-[#fff9db] border-2 border-[#f59f00] rounded-2xl p-4 flex items-center justify-center gap-3">
+                    <span id="result-badge-icon" class="text-4xl">🏅</span>
+                    <div class="text-left">
+                        <div class="text-xs font-extrabold text-[#b45309] uppercase">Badge Unlocked!</div>
+                        <div id="result-badge-name" class="font-display text-xl font-bold text-[#14452f]">Easy Explorer</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                    <button onclick="replayLevel()" class="btn-3d px-6 py-3.5 rounded-2xl bg-[#2ecc71] hover:bg-[#27ae60] text-white font-display text-lg font-bold shadow-[0_4px_0_#1e8449] cursor-pointer">
+                        🔄 Play Again
+                    </button>
+                    <button onclick="goHome()" class="btn-3d px-6 py-3.5 rounded-2xl bg-[#ffd43b] hover:bg-[#fcc419] text-[#14452f] font-display text-lg font-bold shadow-[0_4px_0_#d99b00] cursor-pointer">
+                        📚 Choose Another Level
+                    </button>
+                    <button id="btn-next-level" onclick="continueNextLevel()" class="btn-3d px-6 py-3.5 rounded-2xl bg-[#14452f] hover:bg-[#1d6343] text-[#ffd43b] font-display text-lg font-bold shadow-[0_4px_0_#0a2418] cursor-pointer">
+                        Continue to Next Level ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- Review of Mistakes Section -->
+            <div id="mistakes-section" class="bg-white rounded-3xl p-6 sm:p-7 shadow-lg border-2 border-[#c3e6cb]">
+                <h3 class="font-display text-2xl font-bold text-[#14452f] mb-4 flex items-center gap-2">
+                    <span>📝</span> Pattern Review
+                </h3>
+                <div id="mistakes-list" class="space-y-3">
+                    <!-- Review items injected dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-4 text-xs sm:text-sm font-bold text-[#1d6343] relative z-10">
+        Legarda Elementary School Math Learning Hub • Grade 3 Interactive Worksheet 5
+    </footer>
+
+    <script>
+        /**
+         * ============================================================================
+         * QUESTION BANK: 30 VALIDATED GRADE 3 QUESTIONS (10 PER DIFFICULTY LEVEL)
+         * Every question has two attributes (Letter/Symbol + Number), a clear single
+         * logical rule, 4 distinct choices, and a child-friendly explanation.
+         * ============================================================================
+         */
+        const QUESTION_BANK = {
+            easy: [
+                {
+                    sequence: ["A – 1", "B – 2", "C – 3", "___"],
+                    answer: "D – 4",
+                    choices: ["D – 4", "E – 4", "D – 5", "C – 4"],
+                    rule: "Letters move forward by 1 (A, B, C, D) and numbers count up by 1 (1, 2, 3, 4)."
+                },
+                {
+                    sequence: ["★ – 2", "● – 4", "★ – 6", "● – ___"],
+                    answer: "8",
+                    choices: ["7", "8", "9", "10"],
+                    rule: "The shapes alternate (★, ●, ★, ●) and the numbers skip-count by 2s (2, 4, 6, 8)."
+                },
+                {
+                    sequence: ["A – 5", "B – 10", "C – 15", "___"],
+                    answer: "D – 20",
+                    choices: ["D – 15", "D – 20", "E – 20", "C – 20"],
+                    rule: "Letters go in ABC order (A, B, C, D) and numbers skip-count by 5s (5, 10, 15, 20)."
+                },
+                {
+                    sequence: ["▲ – 1", "■ – 2", "▲ – 3", "___"],
+                    answer: "■ – 4",
+                    choices: ["▲ – 4", "■ – 4", "■ – 5", "● – 4"],
+                    rule: "Shapes alternate (▲, ■, ▲, ■) while numbers increase by 1 (1, 2, 3, 4)."
+                },
+                {
+                    sequence: ["D – 10", "E – 20", "F – 30", "___"],
+                    answer: "G – 40",
+                    choices: ["G – 35", "H – 40", "G – 40", "F – 40"],
+                    rule: "Letters move forward by 1 (D, E, F, G) and numbers skip-count by 10s (10, 20, 30, 40)."
+                },
+                {
+                    sequence: ["♥ – 3", "♦ – 6", "♥ – 9", "♦ – ___"],
+                    answer: "12",
+                    choices: ["10", "11", "12", "15"],
+                    rule: "Symbols alternate (♥, ♦, ♥, ♦) and numbers skip-count by 3s (3, 6, 9, 12)."
+                },
+                {
+                    sequence: ["M – 2", "N – 4", "O – 6", "___"],
+                    answer: "P – 8",
+                    choices: ["P – 7", "Q – 8", "P – 8", "O – 8"],
+                    rule: "Letters go in alphabetical order (M, N, O, P) and numbers skip-count by 2s (2, 4, 6, 8)."
+                },
+                {
+                    sequence: ["☀ – 5", "☁ – 10", "☀ – 15", "___"],
+                    answer: "☁ – 20",
+                    choices: ["☀ – 20", "☁ – 20", "☁ – 25", "★ – 20"],
+                    rule: "Weather symbols alternate (☀, ☁, ☀, ☁) and numbers skip-count by 5s (5, 10, 15, 20)."
+                },
+                {
+                    sequence: ["E – 10", "F – 9", "G – 8", "___"],
+                    answer: "H – 7",
+                    choices: ["H – 7", "H – 9", "I – 7", "G – 7"],
+                    rule: "Letters go forward by 1 (E, F, G, H) while numbers count backward by 1 (10, 9, 8, 7)."
+                },
+                {
+                    sequence: ["● – 1", "▲ – 3", "● – 5", "▲ – ___"],
+                    answer: "7",
+                    choices: ["6", "7", "8", "9"],
+                    rule: "Shapes alternate (●, ▲, ●, ▲) and numbers count odd numbers by adding 2 (1, 3, 5, 7)."
+                }
+            ],
+            average: [
+                {
+                    sequence: ["A – 3", "C – 6", "E – 9", "___", "I – 15"],
+                    answer: "G – 12",
+                    choices: ["F – 12", "G – 12", "G – 11", "H – 12"],
+                    rule: "Letters skip 1 letter each time (A, C, E, G, I) and numbers skip-count by 3s (3, 6, 9, 12, 15)."
+                },
+                {
+                    sequence: ["▲ – 5", "■ – 10", "▲ – 15", "■ – ___", "▲ – 25"],
+                    answer: "20",
+                    choices: ["20", "22", "25", "30"],
+                    rule: "Shapes alternate (▲, ■, ▲, ■, ▲) and numbers skip-count by 5s (5, 10, 15, 20, 25)."
+                },
+                {
+                    sequence: ["B – 2", "D – 4", "F – ___", "H – 8"],
+                    answer: "6",
+                    choices: ["5", "6", "7", "8"],
+                    rule: "Letters skip by 2 (B, D, F, H) and numbers skip-count by 2s (2, 4, 6, 8)."
+                },
+                {
+                    sequence: ["★ – 4", "● – 8", "___", "● – 16", "★ – 20"],
+                    answer: "★ – 12",
+                    choices: ["● – 12", "★ – 12", "★ – 10", "▲ – 12"],
+                    rule: "Shapes alternate (★, ●, ★, ●, ★) and numbers skip-count by 4s (4, 8, 12, 16, 20)."
+                },
+                {
+                    sequence: ["B – 10", "D – 20", "___", "H – 40", "J – 50"],
+                    answer: "F – 30",
+                    choices: ["E – 30", "F – 25", "F – 30", "G – 30"],
+                    rule: "Letters skip 1 letter (B, D, F, H, J) and numbers skip-count by 10s (10, 20, 30, 40, 50)."
+                },
+                {
+                    sequence: ["♦ – 12", "♣ – 10", "♦ – 8", "___", "♦ – 4"],
+                    answer: "♣ – 6",
+                    choices: ["♦ – 6", "♣ – 6", "♣ – 7", "♠ – 6"],
+                    rule: "Symbols alternate (♦, ♣, ♦, ♣, ♦) and numbers count backward by 2s (12, 10, 8, 6, 4)."
+                },
+                {
+                    sequence: ["C – 5", "E – 10", "G – ___", "I – 20", "K – 25"],
+                    answer: "15",
+                    choices: ["12", "14", "15", "18"],
+                    rule: "Letters skip 1 letter (C, E, G, I, K) and numbers skip-count by 5s (5, 10, 15, 20, 25)."
+                },
+                {
+                    sequence: ["● – 3", "▲ – 6", "■ – 9", "● – 12", "___"],
+                    answer: "▲ – 15",
+                    choices: ["■ – 15", "▲ – 15", "● – 15", "▲ – 14"],
+                    rule: "Three shapes repeat in order (●, ▲, ■) and numbers skip-count by 3s (3, 6, 9, 12, 15)."
+                },
+                {
+                    sequence: ["Z – 2", "X – 4", "V – 6", "___", "R – 10"],
+                    answer: "T – 8",
+                    choices: ["U – 8", "T – 8", "S – 8", "T – 7"],
+                    rule: "Letters go backward skipping 1 letter (Z, X, V, T, R) and numbers count up by 2s (2, 4, 6, 8, 10)."
+                },
+                {
+                    sequence: ["A – 25", "C – 20", "___", "G – 10", "I – 5"],
+                    answer: "E – 15",
+                    choices: ["D – 15", "E – 15", "F – 15", "E – 12"],
+                    rule: "Letters move forward skipping 1 (A, C, E, G, I) while numbers count down by 5s (25, 20, 15, 10, 5)."
+                }
+            ],
+            difficult: [
+                {
+                    sequence: ["A – 4", "D – 8", "G – 12", "___", "M – 20"],
+                    answer: "J – 16",
+                    choices: ["J – 16", "K – 16", "J – 18", "L – 16"],
+                    rule: "Letters jump forward by 3 letters (+3: A, D, G, J, M) and numbers skip-count by 4s (4, 8, 12, 16, 20)."
+                },
+                {
+                    sequence: ["★ – 3", "● – 6", "▲ – 9", "★ – 12", "● – ___"],
+                    answer: "15",
+                    choices: ["13", "15", "18", "21"],
+                    rule: "Three shapes repeat (★, ●, ▲, ★, ●) and numbers skip-count by 3s (3, 6, 9, 12, 15)."
+                },
+                {
+                    sequence: ["C – 5", "F – 10", "I – 15", "___", "O – 25"],
+                    answer: "L – 20",
+                    choices: ["L – 20", "K – 20", "L – 25", "M – 20"],
+                    rule: "Letters jump by 3 places (C, F, I, L, O) and numbers skip-count by 5s (5, 10, 15, 20, 25)."
+                },
+                {
+                    sequence: ["B – 6", "E – 12", "___", "K – 24", "N – 30"],
+                    answer: "H – 18",
+                    choices: ["G – 18", "H – 18", "H – 16", "I – 18"],
+                    rule: "Letters jump forward by 3 (B, E, H, K, N) and numbers skip-count by 6s (6, 12, 18, 24, 30)."
+                },
+                {
+                    sequence: ["■ – 7", "▲ – 14", "● – 21", "___", "▲ – 35"],
+                    answer: "■ – 28",
+                    choices: ["▲ – 28", "■ – 28", "● – 28", "■ – 27"],
+                    rule: "Three shapes repeat (■, ▲, ●) and numbers skip-count by 7s (7, 14, 21, 28, 35)."
+                },
+                {
+                    sequence: ["A – 50", "E – 40", "I – 30", "___", "Q – 10"],
+                    answer: "M – 20",
+                    choices: ["L – 20", "M – 20", "N – 20", "M – 25"],
+                    rule: "Letters jump forward by 4 letters (A, E, I, M, Q) while numbers count down by 10s (50, 40, 30, 20, 10)."
+                },
+                {
+                    sequence: ["D – 8", "H – 16", "L – ___", "P – 32", "T – 40"],
+                    answer: "24",
+                    choices: ["20", "22", "24", "28"],
+                    rule: "Letters jump forward by 4 (D, H, L, P, T) and numbers skip-count by 8s (8, 16, 24, 32, 40)."
+                },
+                {
+                    sequence: ["★ – 9", "♦ – 18", "★ – 27", "♦ – ___", "★ – 45"],
+                    answer: "36",
+                    choices: ["32", "35", "36", "40"],
+                    rule: "Shapes alternate (★, ♦, ★, ♦, ★) and numbers skip-count by 9s (9, 18, 27, 36, 45)."
+                },
+                {
+                    sequence: ["P – 4", "M – 8", "___", "G – 16", "D – 20"],
+                    answer: "J – 12",
+                    choices: ["K – 12", "J – 12", "I – 12", "J – 10"],
+                    rule: "Letters go backward by 3 letters (P, M, J, G, D) while numbers skip-count up by 4s (4, 8, 12, 16, 20)."
+                },
+                {
+                    sequence: ["C – 11", "F – 22", "I – 33", "L – 44", "___"],
+                    answer: "O – 55",
+                    choices: ["N – 55", "O – 50", "O – 55", "P – 55"],
+                    rule: "Letters jump forward by 3 (C, F, I, L, O) and numbers skip-count by 11s (11, 22, 33, 44, 55)."
+                }
+            ]
+        };
+
+        /**
+         * ============================================================================
+         * GAME STATE & LOCAL STORAGE PERSISTENCE
+         * ============================================================================
+         */
+        const STORAGE_KEY = "les_math_patterns_w5_v1";
+
+        let state = {
+            soundEnabled: true,
+            currentLevel: "easy",
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            streak: 0,
+            maxStreak: 0,
+            answered: false,
+            history: [], // stores { sequence, userChoice, correctAnswer, isCorrect, rule }
+            progress: {
+                bestScores: { easy: null, average: null, difficult: null },
+                badges: { easy: false, average: false, difficult: false }
+            }
+        };
+
+        // Load saved progress safely
+        function loadProgress() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.bestScores) state.progress.bestScores = { ...state.progress.bestScores, ...parsed.bestScores };
+                    if (parsed.badges) state.progress.badges = { ...state.progress.badges, ...parsed.badges };
+                }
+            } catch (e) {
+                console.warn("LocalStorage unavailable, running in session mode.");
+            }
+            updateHomeUI();
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+            } catch (e) {
+                // Ignore storage quota errors
+            }
+        }
+
+        /**
+         * ============================================================================
+         * WEB AUDIO SOUND EFFECTS ENGINE (TONE.JS)
+         * ============================================================================
+         */
+        let synth = null;
+
+        async function initAudio() {
+            if (!synth && typeof Tone !== "undefined") {
+                try {
+                    await Tone.start();
+                    synth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "triangle" },
+                        envelope: { attack: 0.02, decay: 0.15, sustain: 0.1, release: 0.4 }
+                    }).toDestination();
+                    synth.volume.value = -8;
+                } catch (e) {
+                    console.warn("Audio init skipped:", e);
+                }
+            }
+        }
+
+        function playSound(type) {
+            if (!state.soundEnabled) return;
+            initAudio().then(() => {
+                if (!synth) return;
+                const now = Tone.now();
+                if (type === "click") {
+                    synth.triggerAttackRelease("C5", "32n", now);
+                } else if (type === "correct") {
+                    synth.triggerAttackRelease("C5", "16n", now);
+                    synth.triggerAttackRelease("E5", "16n", now + 0.08);
+                    synth.triggerAttackRelease("G5", "8n", now + 0.16);
+                } else if (type === "wrong") {
+                    synth.triggerAttackRelease("E4", "16n", now);
+                    synth.triggerAttackRelease("C4", "8n", now + 0.12);
+                } else if (type === "win") {
+                    synth.triggerAttackRelease("C5", "16n", now);
+                    synth.triggerAttackRelease("E5", "16n", now + 0.1);
+                    synth.triggerAttackRelease("G5", "16n", now + 0.2);
+                    synth.triggerAttackRelease("C6", "4n", now + 0.3);
+                }
+            });
+        }
+
+        function toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            const icon = document.getElementById("sound-icon");
+            const label = document.getElementById("sound-label");
+            if (state.soundEnabled) {
+                icon.textContent = "🔊";
+                label.textContent = "Sound: ON";
+                playSound("click");
+            } else {
+                icon.textContent = "🔇";
+                label.textContent = "Sound: OFF";
+            }
+        }
+
+        /**
+         * ============================================================================
+         * UTILITY FUNCTIONS
+         * ============================================================================
+         */
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function switchScreen(screenId) {
+            ["screen-start", "screen-game", "screen-complete"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(screenId).classList.remove("hidden");
+
+            const homeNavBtn = document.getElementById("btn-home-nav");
+            if (screenId === "screen-start") {
+                homeNavBtn.classList.add("hidden");
+            } else {
+                homeNavBtn.classList.remove("hidden");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /**
+         * ============================================================================
+         * HOME SCREEN & BADGES UI
+         * ============================================================================
+         */
+        function updateHomeUI() {
+            const levels = ["easy", "average", "difficult"];
+            levels.forEach(lvl => {
+                const best = state.progress.bestScores[lvl];
+                const bestEl = document.getElementById(`best-${lvl}`);
+                if (bestEl) {
+                    bestEl.textContent = best !== null ? `Best: ${best}/10` : "Best: —/10";
+                }
+
+                const badgeEl = document.getElementById(`badge-${lvl}`);
+                if (badgeEl && state.progress.badges[lvl]) {
+                    badgeEl.classList.remove("opacity-50", "border-gray-200", "bg-gray-50");
+                    badgeEl.classList.add("border-[#ffd43b]", "bg-[#fff9db]", "shadow-sm");
+                    const statusText = badgeEl.querySelector(".badge-status");
+                    if (statusText) {
+                        statusText.textContent = "UNLOCKED! ★";
+                        statusText.classList.remove("text-gray-500");
+                        statusText.classList.add("text-[#b45309]");
+                    }
+                }
+            });
+        }
+
+        function goHome() {
+            playSound("click");
+            updateHomeUI();
+            switchScreen("screen-start");
+        }
+
+        /**
+         * ============================================================================
+         * GAMEPLAY ENGINE
+         * ============================================================================
+         */
+        function startLevel(level) {
+            playSound("click");
+            state.currentLevel = level;
+            // Clone & randomize question order while keeping all 10 questions
+            state.questions = shuffleArray(QUESTION_BANK[level]);
+            state.currentIndex = 0;
+            state.score = 0;
+            state.streak = 0;
+            state.maxStreak = 0;
+            state.history = [];
+
+            // Style HUD Level Badge
+            const hudBadge = document.getElementById("hud-level-badge");
+            if (level === "easy") {
+                hudBadge.textContent = "🟢 EASY";
+                hudBadge.className = "px-3.5 py-1 rounded-full font-extrabold text-sm bg-[#e8f8f0] text-[#14452f] border-2 border-[#2ecc71]";
+            } else if (level === "average") {
+                hudBadge.textContent = "🟡 AVERAGE";
+                hudBadge.className = "px-3.5 py-1 rounded-full font-extrabold text-sm bg-[#fff9db] text-[#7c5800] border-2 border-[#ffd43b]";
+            } else {
+                hudBadge.textContent = "🔴 DIFFICULT";
+                hudBadge.className = "px-3.5 py-1 rounded-full font-extrabold text-sm bg-[#e6f0ec] text-[#14452f] border-2 border-[#14452f]";
+            }
+
+            switchScreen("screen-game");
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            state.answered = false;
+            const q = state.questions[state.currentIndex];
+            const qNum = state.currentIndex + 1;
+
+            // Update HUD
+            document.getElementById("hud-q-num").textContent = qNum;
+            document.getElementById("hud-score").textContent = state.score;
+            document.getElementById("hud-streak").textContent = state.streak;
+            document.getElementById("hud-progress-bar").style.width = `${(qNum / 10) * 100}%`;
+
+            // Hide feedback box
+            const feedbackBox = document.getElementById("feedback-box");
+            feedbackBox.classList.add("hidden");
+
+            // Render Pattern Sequence Tiles
+            const patternContainer = document.getElementById("pattern-container");
+            patternContainer.innerHTML = "";
+
+            q.sequence.forEach((term, idx) => {
+                const isMissing = term.includes("___");
+                const tile = document.createElement("div");
+
+                if (isMissing) {
+                    tile.id = "missing-term-tile";
+                    tile.className = "missing-slot min-w-[92px] sm:min-w-[118px] px-4 py-4 sm:py-5 rounded-2xl bg-[#fff9db] border-4 border-dashed border-[#f59f00] font-display text-2xl sm:text-3xl font-bold text-[#b45309] shadow-inner flex items-center justify-center";
+                    tile.textContent = term; // e.g., "___" or "● – ___"
+                } else {
+                    tile.className = "min-w-[92px] sm:min-w-[118px] px-4 py-4 sm:py-5 rounded-2xl bg-[#e8f8f0] border-3 border-2 border-[#2ecc71] font-display text-2xl sm:text-3xl font-bold text-[#14452f] shadow-sm flex items-center justify-center";
+                    tile.textContent = term;
+                }
+
+                patternContainer.appendChild(tile);
+
+                // Add arrow separator between items
+                if (idx < q.sequence.length - 1) {
+                    const arrow = document.createElement("span");
+                    arrow.className = "text-xl sm:text-2xl font-extrabold text-[#2ecc71]";
+                    arrow.textContent = "➔";
+                    patternContainer.appendChild(arrow);
+                }
+            });
+
+            // Render Shuffled Answer Choices
+            const choicesContainer = document.getElementById("choices-container");
+            choicesContainer.innerHTML = "";
+            const shuffledChoices = shuffleArray(q.choices);
+            const optionLetters = ["A", "B", "C", "D"];
+
+            shuffledChoices.forEach((choiceText, idx) => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.dataset.choice = choiceText;
+                btn.onclick = () => handleAnswer(choiceText, btn);
+                btn.className = "choice-btn btn-3d group flex items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-white hover:bg-[#f4fbf7] border-3 border-2 border-[#1d6343] shadow-[0_4px_0_#1d6343] text-left cursor-pointer transition";
+
+                btn.innerHTML = `
+                    <span class="w-10 h-10 rounded-xl bg-[#14452f] text-[#ffd43b] font-display font-bold text-lg flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
+                        ${optionLetters[idx]}
+                    </span>
+                    <span class="font-display text-2xl sm:text-3xl font-bold text-[#14452f]">
+                        ${choiceText}
+                    </span>
+                `;
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedChoice, clickedBtn) {
+            if (state.answered) return;
+            state.answered = true;
+
+            const q = state.questions[state.currentIndex];
+            const isCorrect = selectedChoice === q.answer;
+            const allBtns = document.querySelectorAll(".choice-btn");
+            const missingTile = document.getElementById("missing-term-tile");
+
+            // Disable all choice buttons and highlight correct/wrong
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove("cursor-pointer", "hover:bg-[#f4fbf7]");
+                const val = btn.dataset.choice;
+
+                if (val === q.answer) {
+                    btn.classList.remove("bg-white", "border-[#1d6343]");
+                    btn.classList.add("bg-[#d3f9d8]", "border-[#2b8a3e]", "ring-4", "ring-[#2ecc71]/40");
+                } else if (btn === clickedBtn && !isCorrect) {
+                    btn.classList.remove("bg-white", "border-[#1d6343]");
+                    btn.classList.add("bg-[#ffe3e3]", "border-[#c92a2a]", "animate-shake");
+                } else {
+                    btn.classList.add("opacity-55");
+                }
+            });
+
+            // Fill in the missing slot on the board
+            if (missingTile) {
+                missingTile.classList.remove("missing-slot", "bg-[#fff9db]", "border-dashed", "border-[#f59f00]", "text-[#b45309]");
+                missingTile.textContent = q.sequence.find(t => t.includes("___")).replace("___", q.answer);
+                if (isCorrect) {
+                    missingTile.classList.add("bg-[#2ecc71]", "text-white", "border-solid", "border-[#1e8449]", "animate-bounce-ok");
+                } else {
+                    missingTile.classList.add("bg-[#ffd43b]", "text-[#14452f]", "border-solid", "border-[#f59f00]");
+                }
+            }
+
+            // Update Score & Streak
+            if (isCorrect) {
+                state.score += 1;
+                state.streak += 1;
+                if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+                playSound("correct");
+            } else {
+                state.streak = 0;
+                playSound("wrong");
+            }
+
+            document.getElementById("hud-score").textContent = state.score;
+            document.getElementById("hud-streak").textContent = state.streak;
+
+            // Save to history for end-of-level review
+            state.history.push({
+                sequence: q.sequence.join(", "),
+                userChoice: selectedChoice,
+                correctAnswer: q.answer,
+                isCorrect: isCorrect,
+                rule: q.rule
+            });
+
+            // Show Feedback Banner
+            const feedbackBox = document.getElementById("feedback-box");
+            const feedbackIcon = document.getElementById("feedback-icon");
+            const feedbackTitle = document.getElementById("feedback-title");
+            const feedbackStreak = document.getElementById("feedback-streak-msg");
+            const feedbackExplanation = document.getElementById("feedback-explanation");
+            const nextBtn = document.getElementById("btn-next");
+
+            feedbackBox.classList.remove("hidden", "bg-[#e8f8f0]", "border-[#2ecc71]", "text-[#14452f]", "bg-[#fff9db]", "border-[#f59f00]", "text-[#5c4200]");
+
+            if (isCorrect) {
+                feedbackBox.classList.add("bg-[#e8f8f0]", "border-[#2ecc71]", "text-[#14452f]");
+                feedbackIcon.textContent = "🎉";
+                feedbackTitle.textContent = "Excellent! You found the pattern!";
+                if (state.streak >= 2) {
+                    feedbackStreak.textContent = `🔥 ${state.streak} in a row! Keep up the amazing streak!`;
+                    feedbackStreak.classList.remove("hidden");
+                } else {
+                    feedbackStreak.classList.add("hidden");
+                }
+            } else {
+                feedbackBox.classList.add("bg-[#fff9db]", "border-[#f59f00]", "text-[#5c4200]");
+                feedbackIcon.textContent = "🦉";
+                feedbackTitle.textContent = "Not quite! Look carefully at both attributes.";
+                feedbackStreak.classList.add("hidden");
+            }
+
+            feedbackExplanation.innerHTML = `<span class="underline">Pattern Rule:</span> ${q.rule}`;
+            nextBtn.textContent = state.currentIndex === 9 ? "See Results 🏆" : "Next Question ➔";
+        }
+
+        function nextQuestion() {
+            playSound("click");
+            if (state.currentIndex < 9) {
+                state.currentIndex += 1;
+                renderQuestion();
+            } else {
+                finishLevel();
+            }
+        }
+
+        /**
+         * ============================================================================
+         * LEVEL COMPLETION & SUMMARY REPORT
+         * ============================================================================
+         */
+        function finishLevel() {
+            playSound("win");
+            const score = state.score;
+            const percent = Math.round((score / 10) * 100);
+            const lvl = state.currentLevel;
+
+            // Update best score
+            if (state.progress.bestScores[lvl] === null || score > state.progress.bestScores[lvl]) {
+                state.progress.bestScores[lvl] = score;
+            }
+
+            // Determine Stars & Message
+            let stars = "";
+            let title = "";
+            if (score >= 9) {
+                stars = "⭐⭐⭐";
+                title = "Pattern Master!";
+            } else if (score >= 7) {
+                stars = "⭐⭐";
+                title = "Great Pattern Detective!";
+            } else if (score >= 5) {
+                stars = "⭐";
+                title = "Good Job! Keep Practicing!";
+            } else {
+                stars = "🌱";
+                title = "Keep Trying! You Can Do It!";
+            }
+
+            document.getElementById("result-stars").textContent = stars;
+            document.getElementById("result-title").textContent = title;
+            document.getElementById("result-score").textContent = `${score} / 10`;
+            document.getElementById("result-percent").textContent = `${percent}%`;
+            document.getElementById("result-streak").textContent = `🔥 ${state.maxStreak}`;
+
+            // Check Badge Unlock (Score 7 or higher)
+            const badgeAlert = document.getElementById("result-badge-alert");
+            const badgeMeta = {
+                easy: { icon: "🌱", name: "Easy Explorer Badge" },
+                average: { icon: "🔍", name: "Pattern Detective Badge" },
+                difficult: { icon: "👑", name: "Pattern Master Badge" }
+            };
+
+            if (score >= 7) {
+                state.progress.badges[lvl] = true;
+                badgeAlert.classList.remove("hidden");
+                document.getElementById("result-badge-icon").textContent = badgeMeta[lvl].icon;
+                document.getElementById("result-badge-name").textContent = badgeMeta[lvl].name;
+            } else {
+                badgeAlert.classList.add("hidden");
+            }
+
+            saveProgress();
+
+            // Configure "Continue to Next Level" button
+            const nextLvlBtn = document.getElementById("btn-next-level");
+            if (lvl === "easy") {
+                nextLvlBtn.classList.remove("hidden");
+                nextLvlBtn.textContent = "Continue to Average ➔";
+            } else if (lvl === "average") {
+                nextLvlBtn.classList.remove("hidden");
+                nextLvlBtn.textContent = "Continue to Difficult ➔";
+            } else {
+                nextLvlBtn.classList.add("hidden");
+            }
+
+            // Render Review of Mistakes (or Celebrate 10/10!)
+            const mistakesList = document.getElementById("mistakes-list");
+            mistakesList.innerHTML = "";
+            const mistakes = state.history.filter(item => !item.isCorrect);
+
+            if (mistakes.length === 0) {
+                mistakesList.innerHTML = `
+                    <div class="p-5 rounded-2xl bg-[#e8f8f0] border-2 border-[#2ecc71] text-center font-bold text-[#14452f] text-lg">
+                        🌟 Flawless Victory! You solved all 10 two-attribute patterns without a single mistake!
+                    </div>
+                `;
+            } else {
+                mistakes.forEach((m, index) => {
+                    const card = document.createElement("div");
+                    card.className = "p-4 rounded-2xl bg-[#fffdf2] border-2 border-[#ffd43b] space-y-1.5";
+                    card.innerHTML = `
+                        <div class="font-display text-lg font-bold text-[#14452f]">
+                            Pattern: <span class="bg-white px-2.5 py-0.5 rounded-lg border border-gray-300">${m.sequence}</span>
+                        </div>
+                        <div class="flex flex-wrap gap-3 text-sm font-extrabold">
+                            <span class="text-[#c92a2a]">❌ Your Answer: ${m.userChoice}</span>
+                            <span class="text-[#2b8a3e]">✅ Correct Answer: ${m.correctAnswer}</span>
+                        </div>
+                        <p class="text-sm font-bold text-gray-700">
+                            💡 <strong>Rule:</strong> ${m.rule}
+                        </p>
+                    `;
+                    mistakesList.appendChild(card);
+                });
+            }
+
+            switchScreen("screen-complete");
+        }
+
+        function replayLevel() {
+            startLevel(state.currentLevel);
+        }
+
+        function continueNextLevel() {
+            if (state.currentLevel === "easy") {
+                startLevel("average");
+            } else if (state.currentLevel === "average") {
+                startLevel("difficult");
+            }
+        }
+
+        // Initialize application on page load
+        window.onload = function () {
+            loadProgress();
+        };
+    </script>
+</body>
+</html>
